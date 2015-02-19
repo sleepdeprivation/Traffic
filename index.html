@@ -1,0 +1,118 @@
+<html>
+	<head>
+
+		<style>
+			#view{
+
+			}
+			#controls{
+				width: 40%;
+				display: inline-block;
+			}
+			button{
+				width: 18%;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<canvas id="view" width= "1280px" height ="600px"> Can't see me! </canvas>
+		<div id="controls">
+			<button id="buttonA">A</button>
+			<button id="buttonB">B</button>
+			<button id="buttonC">C</button>
+			<button id="buttonD">D</button>
+			<button id="buttonE">E</button>
+	</body>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="util.js"></script>
+<script src="car.js"></script>
+<script src="street.js"></script>
+<script src="intersection.js"></script>
+<script src="controller.js"></script>
+<script src="gfx.js"></script>
+<script src="traffic.js"></script>
+<script>
+
+function rng(min, max){
+	return Math.floor(Math.random() * (max - min) + min);
+}
+
+
+
+
+function Source(){
+	
+}
+
+
+
+
+
+
+$( document ).ready(function() {
+
+	var sizeX = 12;
+	var sizeY = 12;
+
+	var canvas = document.getElementById('view');
+	var ctx = canvas.getContext('2d');
+
+	var w = canvas.width/sizeX;
+	var h = canvas.height/sizeY;
+
+	var grid = new Traffic(sizeX, sizeY);
+	var GFX = new trafficGFX(w, h, grid, ctx);
+
+	ctx.fillStyle="white";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	grid.f1 = grid.leftUp 
+	grid.f2 = grid.rightDown 
+
+	//pre process
+	var presteps = 0;
+	for(var ii = 0; ii < presteps; ii++){
+		grid.doMove();
+		GFX.draw();
+	}
+	/*for(var ii = 0; ii < 10; ii++){
+		grid.doMove();
+		GFX.draw();
+	}*/
+/*
+	var image = canvas.toDataURL("image/test").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+	window.location.href=image; // it will save locally
+	ctx.fillStyle="white";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+*/	
+	setInterval(function(){
+		ctx.fillStyle="white";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		grid.doMove();
+		GFX.draw();
+		}, 50);
+
+
+		//console.log(grid.arr.getName());
+
+
+
+
+	//ctx.fillRect(0, 0, w, h);
+
+
+
+
+
+
+});
+
+</script>
+
+
+
+</html>
