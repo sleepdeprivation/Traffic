@@ -1,5 +1,4 @@
 
-
 function Car(){
 	this.direction = false; //true is positive
 				//depending on that which manages movement, this variable could be ignored
@@ -27,7 +26,7 @@ function Car(){
 			break;
 
 	}
-	//blinkers	
+	//blinkers (what does the car /want/ to do?)
 	this.rightTurn = false;
 	this.leftTurn = false;
 
