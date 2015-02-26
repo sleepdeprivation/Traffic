@@ -4,9 +4,12 @@ function Traffic(sizeX, sizeY){
 
 	this.grid = new XYArray(sizeX, sizeY);
 
+	//if we can plug the rightmost edge into the left side
 	this.wrapX = (sizeX%3 == 0) ? true : false;
 	this.wrapY = (sizeY%3 == 0) ? true : false;
 
+
+	//when cars go off the edge they're going to go back around to the other side
 	if(this.wrapX && this.wrapY){
 		this.grid.get = this.grid.getCircular;
 	}
@@ -31,7 +34,12 @@ function Traffic(sizeX, sizeY){
 		}
   	}
 
-	//do the things for the different types of objects on the grid
+	/*
+		First we process all the streets,
+		Then we perform intersection traffic
+		This allows us to move cars that just entered a street out of the way if we can
+		before moving another car in.
+	*/
 	this.doMove = function(){
 		var thing;
 
@@ -57,6 +65,16 @@ function Traffic(sizeX, sizeY){
 		}}
 		
 	}
+	
+/*
+	Transfer functions
+	
+	The below functions transfer cars in specific ways from street to street.
+	Remember - a street is just an array with functions for moving objects in them
+	
+	These operations are safe (no cars will be harmed...)
+	
+*/
 
 	/*
 		Move from the positive end of street A to the negative end of street B
@@ -154,7 +172,12 @@ function Traffic(sizeX, sizeY){
 			}
 		}
 	}
-
+	
+/*
+	For the given intersection, choose a car to turn at random and have it turn in a random
+	direction.
+	The below functions were written to replace the large function calls to the above
+*/
 	this.randomTurns = function(x, y, intersection){
 
 
@@ -194,8 +217,15 @@ function Traffic(sizeX, sizeY){
 	}
 
 	/*
+	These 8 functions let you move cars from one side of the intersection to one of the remaining 3 sides.
+	The first word is where the car comes from, the second word is where they are going.
+	These operations are safe (they won't delete cars)
+	
+		Example:
 		"left up"-
 		Move cars from the LEFT side of the intersection to the UP (above) side
+		
+	
 	*/
 	this.leftUp = function(x, y, intersection){
 		this.P2Transfer(this.grid.get(x-1, y), this.grid.get(x, y-1));
@@ -223,6 +253,11 @@ function Traffic(sizeX, sizeY){
 	}
 
 
+
+/*
+	These functions perform specific sets of moves on an intersection
+	Try using them for every intersection to see what happens...
+*/
 	this.counterClockWise = function(x, y, intersection){
 		//left up
 		this.P2Transfer(this.grid.get(x-1, y), this.grid.get(x, y-1));
@@ -246,6 +281,11 @@ function Traffic(sizeX, sizeY){
 	}
 
 
+/*
+	Perform a specific move at the intersection.
+	At the moment, you'll need to just uncomment the one you want on
+	Later, I'll add some buttons or something out in the index.html
+*/
 	this.intersectionMove = function(x, y, intersection){
 
 		if(this.grid.boundsCheck(x, y)){
@@ -260,7 +300,7 @@ function Traffic(sizeX, sizeY){
 				this.randomTurns(x, y, intersection);
 				//this.clockWise(x, y, intersection);
 				//this.f1(x, y, intersection); this.f2(x, y, intersection);
-				intersection.vertical = !intersection.vertical;
+				intersection.vertical = !intersection.vertical; //change from North South to East West and back
 			}else{
 				if(intersection.vertical){
 					this.PNTransfer(this.grid.get(x, y-1), this.grid.get(x, y+1));//move things down from above
